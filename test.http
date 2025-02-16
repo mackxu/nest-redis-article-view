@@ -1,0 +1,17 @@
+GET http://localhost:3000/init-data
+
+###
+
+POST http://localhost:3000/user/login
+Content-Type: application/json
+
+{
+  "username": "lisi",
+  "password": "123456"
+}
+
+### 查看文章
+GET http://localhost:3000/article/1
+
+### 记录浏览文章次数
+GET http://localhost:3000/article/1/views

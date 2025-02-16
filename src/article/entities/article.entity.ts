@@ -14,6 +14,6 @@ export class Article {
   viewCount: number;
   @Column({ comment: '点赞量', default: 0 })
   likeCount: number;
-  @Column({ comment: '收藏量' })
+  @Column({ comment: '收藏量', default: 0 })
   collectCount: number;
 }
