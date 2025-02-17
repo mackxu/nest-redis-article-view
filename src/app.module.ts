@@ -8,6 +8,7 @@ import { TaskModule } from './task/task.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entities/user.entity';
 import { Article } from './article/entities/article.entity';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { Article } from './article/entities/article.entity';
       logging: true,
       entities: [User, Article],
     }),
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],

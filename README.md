@@ -15,4 +15,8 @@
 
 ## redis
 
-## schedule
+保存浏览量
+
+## schedule 定时任务
+
+定时同步文章浏览量

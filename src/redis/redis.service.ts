@@ -6,6 +6,10 @@ export class RedisService {
   @Inject('REDIS_CLIENT')
   private readonly redis: Redis;
 
+  async keys(pattern: string) {
+    return await this.redis.keys(pattern);
+  }
+
   async get(key: string) {
     return await this.redis.get(key);
   }

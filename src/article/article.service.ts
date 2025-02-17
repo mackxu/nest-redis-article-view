@@ -1,6 +1,4 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { CreateArticleDto } from './dto/create-article.dto';
-import { UpdateArticleDto } from './dto/update-article.dto';
 import { InjectEntityManager } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
 import { Article } from './entities/article.entity';
@@ -14,24 +12,27 @@ export class ArticleService {
   @Inject(RedisService)
   private readonly redisService: RedisService;
 
-  create(createArticleDto: CreateArticleDto) {
-    return 'This action adds a new article';
-  }
-
-  findAll() {
-    return `This action returns all article`;
-  }
-
   findOne(id: number) {
     return this.entityManager.findOneBy(Article, {
       id,
     });
   }
   async addViews(id: number, userId: number) {
-    console.log(userId, 'userId');
+    if (!userId) {
+      throw new BadRequestException('用户未登录');
+    }
+    const articleAndUserKey = `article:${id}:user:${userId}`;
+    const viewed = await this.redisService.get(articleAndUserKey);
+
     const articleKey = `article:${id}`;
     // 从redis中读取数据
     let articleRedisRes = await this.redisService.hashGet(articleKey);
+    if (viewed) {
+      return +articleRedisRes.viewCount;
+    }
+
+    // 设置标记，有效时间为10秒
+    await this.redisService.set(articleAndUserKey, 1, 10);
     if (articleRedisRes.viewCount === undefined) {
       const article = await this.findOne(id);
       if (!article) {
@@ -53,11 +54,22 @@ export class ArticleService {
     return viewCount;
   }
 
-  update(id: number, updateArticleDto: UpdateArticleDto) {
-    return `This action updates a #${id} article`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} article`;
+  async flushRedisToMysql() {
+    const keys = await this.redisService.keys('article:*');
+    for (const key of keys) {
+      const articleId = key.split(':')[1];
+      const articleRedisRes = await this.redisService.hashGet(key);
+      await this.entityManager.update(
+        Article,
+        {
+          id: +articleId,
+        },
+        {
+          viewCount: +articleRedisRes.viewCount,
+          likeCount: +articleRedisRes.likeCount,
+          collectCount: +articleRedisRes.collectCount,
+        },
+      );
+    }
   }
 }

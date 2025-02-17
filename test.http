@@ -15,4 +15,4 @@ GET http://localhost:3000/article/1
 
 ### 记录浏览文章次数
 GET http://localhost:3000/article/2/views
-Cookie: connect.sid=s%3AdGZFC5vwQdgmoCe-yIfKdShz9WP_lvlq.174gNhdT6I2lkymOSow9UB4vT1ss180w50%2BtGwGEBxw; Path=/; HttpOnly
+Cookie: connect.sid=s%3AgbtllDNZTNRCgsq3O8zjZMupg7YALh16.ApIZC79X4dJjF2VpdWqZsWUTdPs%2B3GJIHcA4qd7TQ7c; Path=/; HttpOnly
