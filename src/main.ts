@@ -9,9 +9,9 @@ async function bootstrap() {
       secret: 'duoduoxu',
       resave: false,
       saveUninitialized: false,
-      cookie: {
-        secure: true,
-      },
+      // cookie: {
+      //   secure: true,
+      // },
     }),
   );
   await app.listen(process.env.PORT ?? 3000);

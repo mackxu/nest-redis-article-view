@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Session,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { CreateArticleDto } from './dto/create-article.dto';
@@ -31,8 +32,11 @@ export class ArticleController {
   }
 
   @Get(':id/views')
-  async addViews(@Param('id') id: string) {
-    return this.articleService.addViews(+id);
+  async addViews(
+    @Param('id') id: string,
+    @Session() session: Record<string, any>,
+  ) {
+    return this.articleService.addViews(+id, session?.user?.id);
   }
 
   @Patch(':id')
